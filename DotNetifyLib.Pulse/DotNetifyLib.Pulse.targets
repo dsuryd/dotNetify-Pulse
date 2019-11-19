@@ -1,0 +1,8 @@
+﻿<Project>
+  <ItemGroup>
+    <UIFiles Include="$(MSBuildThisFileDirectory)\..\pulse-ui\**\*.*" />
+  </ItemGroup>
+  <Target Name="CopyUIFiles" BeforeTargets="Build">
+    <Copy SourceFiles="@(UIFiles)" DestinationFolder="$(TargetDir)pulse-ui\%(RecursiveDir)" />
+  </Target>
+</Project>
