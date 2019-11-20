@@ -20,7 +20,6 @@ namespace DevApp
                     logging.ClearProviders();
                     logging.AddConsole();
                     logging.AddDotNetifyPulse();
-                    logging.SetMinimumLevel(LogLevel.Trace);
                 });
     }
 }

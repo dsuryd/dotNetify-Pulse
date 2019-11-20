@@ -14,6 +14,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DotNetify.Elements" Version="1.1.0" />
+    <PackageReference Include="DotNetify.SignalR" Version="3.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
@@ -25,4 +27,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   echo Building UI bundle...&#xD;&#xA;   npm --prefix $(ProjectDir)..\DevApp run prod&#xD;&#xA;   xcopy $(ProjectDir)..\DevApp\wwwroot\pulse-ui $(ProjectDir)pulse-ui /q /y&#xD;&#xA;)" />
+  </Target>
 </Project>

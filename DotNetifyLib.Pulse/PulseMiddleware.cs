@@ -8,21 +8,31 @@ namespace DotNetify.Pulse
     internal class PulseMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly PulseConfiguration _config;
 
-        public PulseMiddleware(RequestDelegate next)
+        public PulseMiddleware(RequestDelegate next, PulseConfiguration config)
         {
             _next = next;
+            _config = config;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            if (httpContext.Request.Path.ToString().EndsWith("/pulse"))
+            var uiPath = (_config.UIPath ?? $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}/pulse-ui").TrimEnd('/');
+            var requestPath = httpContext.Request.Path.ToString();
+
+            if (requestPath.EndsWith("/pulse"))
             {
-                var executingDirectory = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-                using (var reader = new StreamReader(File.OpenRead($"{executingDirectory}/pulse-ui/index.html")))
+                using (var reader = new StreamReader(File.OpenRead($"{uiPath}/index.html")))
                     await httpContext.Response.WriteAsync(reader.ReadToEnd());
             }
-            await _next(httpContext);
+            else if (requestPath.EndsWith("/pulse-ui/main.js"))
+            {
+                using (var reader = new StreamReader(File.OpenRead($"{uiPath}/main.js")))
+                    await httpContext.Response.WriteAsync(reader.ReadToEnd());
+            }
+            else
+                await _next(httpContext);
         }
     }
 }
