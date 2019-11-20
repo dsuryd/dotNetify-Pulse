@@ -5,17 +5,16 @@ namespace DotNetify.Pulse.Log
 {
     public struct LogItem
     {
-        public DateTimeOffset TimeStamp { get; }
+        public DateTimeOffset Time { get; }
+        public string FormattedTime => Time.ToString("yyyy'-'MM'-'dd HH':'mm':'ss.fff");
         public string Level { get; }
-        public string EventName { get; }
         public string Message { get; }
 
-        public LogItem(LogLevel level, EventId eventId, string message)
+        public LogItem(LogLevel level, string message)
         {
             Level = level.ToString();
-            EventName = eventId.Name;
             Message = message;
-            TimeStamp = DateTimeOffset.Now;
+            Time = DateTimeOffset.Now;
         }
     }
 }

@@ -22,12 +22,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="pulse-ui\" />
     <Content Update="pulse-ui\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="if $(ConfigurationName) == Release (&#xD;&#xA;   echo Building UI bundle...&#xD;&#xA;   npm --prefix $(ProjectDir)..\DevApp run prod&#xD;&#xA;   xcopy $(ProjectDir)..\DevApp\wwwroot\pulse-ui $(ProjectDir)pulse-ui /q /y&#xD;&#xA;)" />
-  </Target>
 </Project>

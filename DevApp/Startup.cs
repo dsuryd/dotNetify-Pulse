@@ -26,24 +26,15 @@ namespace DevApp
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
 #if DEBUG
-            app.UseStaticFiles();
             app.UseDeveloperExceptionPage();
-            app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-            {
-                HotModuleReplacement = true,
-                HotModuleReplacementClientOptions = new Dictionary<string, string> { { "reload", "true" } },
-            });
-
+#endif
             app.UseDotNetifyPulse(config =>
             {
-                config.UIPath = $"{Directory.GetCurrentDirectory()}/wwwroot/pulse-ui";
+                //config.UIPath = $"{Directory.GetCurrentDirectory()}/wwwroot/pulse-ui";
             });
-#else
-            app.UseDotNetifyPulse();
-#endif
             app.UseMvc();
         }
     }

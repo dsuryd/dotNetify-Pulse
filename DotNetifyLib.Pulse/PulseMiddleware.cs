@@ -18,18 +18,14 @@ namespace DotNetify.Pulse
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
-            var uiPath = (_config.UIPath ?? $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}/pulse-ui").TrimEnd('/');
+            var uiPath = (_config.UIPath ?? $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\pulse-ui").TrimEnd(new char[] { '/', '\\' });
             var requestPath = httpContext.Request.Path.ToString();
 
             if (requestPath.EndsWith("/pulse"))
             {
-                using (var reader = new StreamReader(File.OpenRead($"{uiPath}/index.html")))
-                    await httpContext.Response.WriteAsync(reader.ReadToEnd());
-            }
-            else if (requestPath.EndsWith("/pulse-ui/main.js"))
-            {
-                using (var reader = new StreamReader(File.OpenRead($"{uiPath}/main.js")))
-                    await httpContext.Response.WriteAsync(reader.ReadToEnd());
+                string body = File.ReadAllText($"{uiPath}/body.html");
+                string index = File.ReadAllText($"{uiPath}/index.html").Replace("@body", body);
+                await httpContext.Response.WriteAsync(index);
             }
             else
                 await _next(httpContext);
