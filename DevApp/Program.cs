@@ -15,11 +15,11 @@ namespace DevApp
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .ConfigureLogging(logging =>
+                .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.ClearProviders();
                     logging.AddConsole();
-                    logging.AddDotNetifyPulse();
+                    logging.AddDotNetifyPulse(hostingContext.Configuration);
                 });
     }
 }

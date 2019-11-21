@@ -1,28 +1,18 @@
-﻿using DotNetify.Pulse;
+﻿using DotNetify;
+using DotNetify.Pulse;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace DevApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDotNetifyPulse();
+            services.AddSignalR();
+            services.AddDotNetify();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
@@ -31,10 +21,15 @@ namespace DevApp
 #if DEBUG
             app.UseDeveloperExceptionPage();
 #endif
+            app.UseWebSockets();
+            app.UseSignalR(config => config.MapDotNetifyHub());
+
             app.UseDotNetifyPulse(config =>
             {
-                //config.UIPath = $"{Directory.GetCurrentDirectory()}/wwwroot/pulse-ui";
+                config.UIPath = $"{Directory.GetCurrentDirectory()}\\custom-pulse-ui";
             });
+            app.UseDotNetify();
+
             app.UseMvc();
         }
     }

@@ -29,7 +29,7 @@ namespace DotNetify.Pulse.Log
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            _logEmitter.Log.OnNext(new LogItem(logLevel, formatter(state, exception)));
+            _logEmitter.Emit(new LogItem(logLevel, formatter(state, exception)));
         }
     }
 }
