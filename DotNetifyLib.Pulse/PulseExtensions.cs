@@ -23,6 +23,8 @@ namespace DotNetify.Pulse
             var pulseConfig = config?.GetSection(CONFIG_SECTION).Get<PulseConfiguration>() ?? new PulseConfiguration();
             builder.Services.TryAdd(ServiceDescriptor.Singleton(_ => pulseConfig));
 
+            builder.Services.AddHostedService<SystemUsageCollector>();
+
             return builder;
         }
 
