@@ -1,8 +1,20 @@
 ﻿<d-vm-context vm="PulseVM">
-    <d-frame>
-        <d-data-grid id="Logs">
-            <d-grid-column colkey="FormattedTime" width="12rem"></d-grid-column>
-            <d-grid-column colkey="Level" width="7rem"></d-grid-column>
-        </d-data-grid>
-    </d-frame>
+    <d-main>
+        <d-header css="padding: 0 1rem">
+            <d-panel>
+                <h2>Pulse</h2>
+            </d-panel>
+            <d-panel right="true">
+                <d-radio-toggle id="LiveUpdate"></d-radio-toggle>
+            </d-panel>
+        </d-header>
+        <d-section>
+            <d-frame>
+                <d-data-grid id="Logs">
+                    <d-grid-column colkey="FormattedTime" width="12rem"></d-grid-column>
+                    <d-grid-column colkey="Level" width="7rem"></d-grid-column>
+                </d-data-grid>
+            </d-frame>
+            <d-section>
+    </d-main>
 </d-vm-context>

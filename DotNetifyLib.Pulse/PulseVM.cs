@@ -4,6 +4,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reactive.Linq;
+using System.Linq;
 
 namespace DotNetify.Pulse
 {
@@ -13,6 +14,12 @@ namespace DotNetify.Pulse
 
         public PulseVM(ILogEmitter logEmitter, PulseConfiguration pulseConfig)
         {
+            string LiveUpdate;
+            var options = new Dictionary<string, string> { { "on", "On" }, { "off", "Off" } };
+
+            var liveUpdateProp = AddProperty(nameof(LiveUpdate), "on")
+                .WithAttribute(new RadioGroupAttribute() { Options = options.ToArray() });
+
             var logUpdateAction = AddLogDataSource(logEmitter, pulseConfig);
 
             // Set minimum interval to push updates.
@@ -20,6 +27,8 @@ namespace DotNetify.Pulse
                .Interval(TimeSpan.FromMilliseconds(pulseConfig.PushUpdateInterval))
                .Subscribe(_ =>
                {
+                   if (liveUpdateProp == "off") return;
+
                    logUpdateAction();
                    PushUpdates();
                })

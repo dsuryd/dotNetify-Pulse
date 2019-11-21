@@ -14,9 +14,9 @@
     public class LogConfiguration
     {
         // How many last log items to cache.
-        public int Buffer { get; set; } = 10;
+        public int Buffer { get; set; } = 5;
 
         // Number of rows in the log data grid.
-        public int Rows { get; set; } = 20;
+        public int Rows { get; set; } = 10;
     }
 }
