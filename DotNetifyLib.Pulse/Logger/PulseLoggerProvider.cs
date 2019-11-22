@@ -2,24 +2,22 @@
 
 namespace DotNetify.Pulse.Log
 {
-    public class PulseLoggerProvider : ILoggerProvider
-    {
-        private readonly IExternalScopeProvider _scopeProvider;
-        private readonly ILogEmitter _logEmitter;
+   public class PulseLoggerProvider : ILoggerProvider
+   {
+      private readonly ILogger _logger;
 
-        public PulseLoggerProvider(ILogEmitter logEmitter)
-        {
-            _scopeProvider = new LoggerExternalScopeProvider();
-            _logEmitter = logEmitter;
-        }
+      public PulseLoggerProvider(IPulseLogger logger)
+      {
+         _logger = logger as ILogger;
+      }
 
-        public ILogger CreateLogger(string categoryName)
-        {
-            return new PulseLogger(_scopeProvider, _logEmitter);
-        }
+      public ILogger CreateLogger(string categoryName)
+      {
+         return _logger;
+      }
 
-        public void Dispose()
-        {
-        }
-    }
+      public void Dispose()
+      {
+      }
+   }
 }

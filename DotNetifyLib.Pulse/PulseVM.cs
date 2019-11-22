@@ -1,85 +1,51 @@
-﻿using DotNetify.Elements;
-using DotNetify.Pulse.Log;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.Collections.Generic;
-using System.Reactive.Linq;
 using System.Linq;
+using System.Reactive.Linq;
+using DotNetify.Elements;
+using DotNetify.Pulse.Log;
 
 namespace DotNetify.Pulse
 {
-    public class PulseVM : BaseVM
-    {
-        private readonly List<IDisposable> _subscriptions = new List<IDisposable>();
+   public class PulseVM : BaseVM
+   {
+      private readonly List<Action> _disposeActions = new List<Action>();
 
-        public PulseVM(ILogEmitter logEmitter, PulseConfiguration pulseConfig)
-        {
-            string LiveUpdate;
-            var options = new Dictionary<string, string> { { "on", "On" }, { "off", "Off" } };
+      public PulseVM(IEnumerable<IDataSource> dataSources, PulseConfiguration pulseConfig)
+      {
+         string LiveUpdate;
+         var options = new Dictionary<string, string> { { "on", "On" }, { "off", "Off" } };
 
-            var liveUpdateProp = AddProperty(nameof(LiveUpdate), "on")
-                .WithAttribute(new RadioGroupAttribute() { Options = options.ToArray() });
+         var liveUpdateProp = AddProperty(nameof(LiveUpdate), "on")
+             .WithAttribute(new RadioGroupAttribute() { Options = options.ToArray() });
 
-            var logUpdateAction = AddLogDataSource(logEmitter, pulseConfig);
+         var onPushUpdates = new List<Action>();
+         foreach (var dataSource in dataSources)
+         {
+            dataSource.ConfigureView(this, out Action onPushUpdate, out Action onDispose);
+            onPushUpdates.Add(onPushUpdate);
+            _disposeActions.Add(onDispose);
+         }
 
-            // Set minimum interval to push updates.
-            Observable
-               .Interval(TimeSpan.FromMilliseconds(pulseConfig.PushUpdateInterval))
-               .Subscribe(_ =>
-               {
-                   if (liveUpdateProp == "off") return;
-
-                   logUpdateAction();
-                   PushUpdates();
-               })
-               .AddTo(_subscriptions);
-        }
-
-        public override void Dispose()
-        {
-            _subscriptions.ForEach(x => x.Dispose());
-            base.Dispose();
-        }
-
-        private Action AddLogDataSource(ILogEmitter logEmitter, PulseConfiguration pulseConfig)
-        {
-            // Property names.
-            string Logs;
-            string SelectedLog;
-
-            var selectedLog = AddProperty<DateTimeOffset>(nameof(SelectedLog));
-
-            AddProperty(nameof(Logs), new LogItem[] { })
-                .WithItemKey(nameof(LogItem.Time))
-                .WithAttribute(
-                    new DataGridAttribute
-                    {
-                        RowKey = nameof(LogItem.Time),
-                        Columns = new DataGridColumn[]
-                        {
-                            new DataGridColumn(nameof(LogItem.FormattedTime), "Time") { Sortable = true },
-                            new DataGridColumn(nameof(LogItem.Level), "Level") { Sortable = true },
-                            new DataGridColumn(nameof(LogItem.Message), "Message")
-                        },
-                        Rows = pulseConfig.Log.Rows
-                    }
-                    .CanSelect(DataGridAttribute.Selection.Single, selectedLog)
-                );
-
-            var cachedLogs = new ConcurrentStack<LogItem>();
-
-            logEmitter.Log
-                .Subscribe(log => cachedLogs.Push(log))
-                .AddTo(_subscriptions);
-
-            return () =>
+         // Set minimum interval to push updates.
+         var intervalSubscription = Observable
+            .Interval(TimeSpan.FromMilliseconds(pulseConfig.PushUpdateInterval))
+            .Subscribe(_ =>
             {
-                if (cachedLogs.TryPop(out LogItem log))
-                {
-                    this.AddList(nameof(Logs), log);
-                    selectedLog.Value = log.Time;
-                }
-            };
-        }
-    }
+               if (liveUpdateProp == "off")
+                  return;
+
+               onPushUpdates.ForEach(x => x());
+               PushUpdates();
+            });
+
+         _disposeActions.Add(() => intervalSubscription.Dispose());
+      }
+
+      public override void Dispose()
+      {
+         _disposeActions.ForEach(x => x());
+         base.Dispose();
+      }
+   }
 }
