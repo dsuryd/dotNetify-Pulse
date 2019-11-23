@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿/*
+Copyright 2019 Dicky Suryadi
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+ */
+
+using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -25,17 +38,29 @@ namespace DotNetify.Pulse
 
          if (requestPath.EndsWith("/pulse"))
          {
-            string body = File.Exists($"{uiPath}\\body.html") ? File.ReadAllText($"{uiPath}\\body.html") : File.ReadAllText($"{DEFAULT_UI_PATH}\\body_default.html");
-            string script = File.Exists($"{uiPath}\\script.html") ? File.ReadAllText($"{uiPath}\\script.html") : "";
-            string index = File.Exists($"{uiPath}\\index.html") ? File.ReadAllText($"{uiPath}\\index.html") : File.ReadAllText($"{DEFAULT_UI_PATH}\\index.html");
+            string index = ReadFile("index.html", uiPath, DEFAULT_UI_PATH);
+            string script = ReadFile("script.html", uiPath, DEFAULT_UI_PATH);
+            string section = ReadFile("section.html", uiPath, DEFAULT_UI_PATH);
 
             await httpContext.Response.WriteAsync(index
-                .Replace("<!--body-->", body)
-                .Replace("<!--script-->", script)
+               .Replace("<!--script-->", script)
+               .Replace("<!--section-->", section)
             );
          }
          else
             await _next(httpContext);
+      }
+
+      private string ReadFile(string fileName, string path, string defaultPath)
+      {
+         string filePath = $"{path}\\{fileName}";
+         string defaultFilePath = $"{defaultPath}\\{fileName}";
+
+         string validPath = File.Exists(filePath) ? filePath : File.Exists(defaultFilePath) ? defaultFilePath : null;
+         if (validPath == null)
+            return string.Empty;
+
+         return File.ReadAllText(validPath);
       }
    }
 }

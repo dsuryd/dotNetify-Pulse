@@ -47,13 +47,6 @@ namespace DotNetify.Pulse
          var totalCpuUsed = totalCpuTimeUsed * 100 / cpuTimeElapsed;
          var privilegedCpuUsed = privilegedCpuTimeUsed * 100 / cpuTimeElapsed;
          var userCpuUsed = userCpuTimeUsed * 100 / cpuTimeElapsed;
-
-         var workingSet = _process.WorkingSet64;
-         var nonPagedSystemMemory = _process.NonpagedSystemMemorySize64;
-         var pagedMemory = _process.PagedMemorySize64;
-         var pagedSystemMemory = _process.PagedSystemMemorySize64;
-         var privateMemory = _process.PrivateMemorySize64;
-         var virtualMemoryMemory = _process.VirtualMemorySize64;
       }
 
       public Task StopAsync(CancellationToken cancellationToken)

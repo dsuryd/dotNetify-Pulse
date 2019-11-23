@@ -11,20 +11,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-using Microsoft.Extensions.Logging;
+using System;
 
-namespace DotNetify.Pulse.Log
+namespace DotNetify.Pulse
 {
-   public class PulseLoggerProvider : ILoggerProvider
+   public class Disposable : IDisposable
    {
-      private readonly ILogger _logger;
+      private readonly Action _dispose;
 
-      public PulseLoggerProvider(IPulseLogger logger) => _logger = logger as ILogger;
+      public Disposable(Action dispose) => _dispose = dispose;
 
-      public ILogger CreateLogger(string categoryName) => _logger;
-
-      public void Dispose()
-      {
-      }
+      public void Dispose() => _dispose?.Invoke();
    }
 }

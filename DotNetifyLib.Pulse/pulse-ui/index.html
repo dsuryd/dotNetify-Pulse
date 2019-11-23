@@ -4,7 +4,7 @@
     <title>Pulse</title>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, width=device-width" />
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://unpkg.com/dotnetify-elements@latest/dotnetify-elements.css" rel="stylesheet" />
 
@@ -25,6 +25,22 @@
     <!--script-->
 </head>
 <body>
-    <!--body-->
+    <d-vm-context vm="PulseVM">
+        <d-main>
+            <d-header css="padding: 0 1rem">
+                <d-panel>
+                    <h2>Pulse</h2>
+                </d-panel>
+                <d-panel right="true" center="true">
+                    <d-checkbox id="LiveUpdate" switch="true"></d-checkbox>
+                </d-panel>
+            </d-header>
+            <d-section>
+                <d-frame>
+                    <!--section-->
+                </d-frame>
+            </d-section>
+        </d-main>
+    </d-vm-context>
 </body>
 </html>

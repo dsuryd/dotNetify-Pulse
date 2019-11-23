@@ -1,51 +1,56 @@
-﻿using System;
+﻿using DotNetify.Elements;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reactive.Linq;
-using DotNetify.Elements;
-using DotNetify.Pulse.Log;
 
 namespace DotNetify.Pulse
 {
    public class PulseVM : BaseVM
    {
-      private readonly List<Action> _disposeActions = new List<Action>();
+      private readonly List<IDisposable> _disposables = new List<IDisposable>();
 
-      public PulseVM(IEnumerable<IDataSource> dataSources, PulseConfiguration pulseConfig)
+      public ReactiveProperty<bool> LiveUpdate { get; }
+
+      public PulseVM(IEnumerable<IPulseDataSource> dataSources, PulseConfiguration pulseConfig)
       {
-         string LiveUpdate;
-         var options = new Dictionary<string, string> { { "on", "On" }, { "off", "Off" } };
+         LiveUpdate = AddProperty(nameof(LiveUpdate), true)
+             .WithAttribute(new CheckboxAttribute() { Label = "Live update" });
 
-         var liveUpdateProp = AddProperty(nameof(LiveUpdate), "on")
-             .WithAttribute(new RadioGroupAttribute() { Options = options.ToArray() });
-
-         var onPushUpdates = new List<Action>();
-         foreach (var dataSource in dataSources)
-         {
-            dataSource.ConfigureView(this, out Action onPushUpdate, out Action onDispose);
-            onPushUpdates.Add(onPushUpdate);
-            _disposeActions.Add(onDispose);
-         }
+         var onPushUpdates = ConfigureDataSource(dataSources);
 
          // Set minimum interval to push updates.
-         var intervalSubscription = Observable
+         Observable
             .Interval(TimeSpan.FromMilliseconds(pulseConfig.PushUpdateInterval))
             .Subscribe(_ =>
             {
-               if (liveUpdateProp == "off")
-                  return;
-
-               onPushUpdates.ForEach(x => x());
-               PushUpdates();
-            });
-
-         _disposeActions.Add(() => intervalSubscription.Dispose());
+               onPushUpdates.ForEach(x => x(LiveUpdate));
+               if (LiveUpdate)
+                  PushUpdates();
+            })
+            .AddTo(_disposables);
       }
 
       public override void Dispose()
       {
-         _disposeActions.ForEach(x => x());
+         _disposables.ForEach(x => x.Dispose());
          base.Dispose();
+      }
+
+      private List<OnPushUpdate> ConfigureDataSource(IEnumerable<IPulseDataSource> dataSources)
+      {
+         var onPushUpdates = new List<OnPushUpdate>();
+
+         foreach (var dataSource in dataSources)
+         {
+            dataSource
+               .Configure(this, out OnPushUpdate onPushUpdate)
+               .AddTo(_disposables);
+
+            if (onPushUpdate != null)
+               onPushUpdates.Add(onPushUpdate);
+         }
+
+         return onPushUpdates;
       }
    }
 }
