@@ -12,6 +12,7 @@ limitations under the License.
  */
 
 using System;
+using System.Linq;
 
 namespace DotNetify.Pulse
 {
@@ -20,6 +21,8 @@ namespace DotNetify.Pulse
       private readonly Action _dispose;
 
       public Disposable(Action dispose) => _dispose = dispose;
+
+      public Disposable(params IDisposable[] args) => _dispose = () => args.ToList().ForEach(x => x.Dispose());
 
       public void Dispose() => _dispose?.Invoke();
    }

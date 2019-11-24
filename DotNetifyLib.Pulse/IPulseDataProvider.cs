@@ -17,7 +17,7 @@ namespace DotNetify.Pulse
 {
    public delegate void OnPushUpdate(bool liveUpdate);
 
-   public interface IPulseDataSource
+   public interface IPulseDataProvider
    {
       IDisposable Configure(PulseVM pulseVM, out OnPushUpdate onPushUpdate);
    }

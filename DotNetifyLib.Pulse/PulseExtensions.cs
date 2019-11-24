@@ -11,15 +11,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
+using System;
+using System.Collections.Generic;
 using DotNetify.Pulse.Log;
+using DotNetify.Pulse.SystemUsage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace DotNetify.Pulse
 {
@@ -30,12 +29,15 @@ namespace DotNetify.Pulse
          var pulseConfig = configuration?.GetSection(PulseConfiguration.SECTION).Get<PulseConfiguration>() ?? new PulseConfiguration();
          services.TryAdd(ServiceDescriptor.Singleton(_ => pulseConfig));
 
-         services.TryAddTransient<LoggerExternalScopeProvider>();
-         services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, PulseLoggerProvider>());
-         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataSource, PulseLogger>());
-         services.TryAddSingleton(provider => (IPulseLogger)provider.GetServices<IPulseDataSource>().First(x => x is PulseLogger));
+         return services
+            .AddPulseLogger()
+            .AddPulseMemoryUsage()
+            .AddPulseCpuUsage();
+      }
 
-         return services;
+      public static IServiceCollection ClearPulseDataProvider(this IServiceCollection services)
+      {
+         return services.RemoveAll<IPulseDataProvider>();
       }
 
       public static IDotNetifyConfiguration UseDotNetifyPulse(this IDotNetifyConfiguration dotNetifyConfig, IApplicationBuilder app, Action<PulseConfiguration> options = null)

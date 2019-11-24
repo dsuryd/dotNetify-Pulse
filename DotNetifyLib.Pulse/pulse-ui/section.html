@@ -1,5 +1,29 @@
-﻿<d-data-grid id="Logs">
+﻿<template id="scalar-display">
+    <d-panel css="background-color: white; padding: 1rem">
+        <label slot="label"></label>
+        <d-panel horizontal="true">
+            <h3 slot="value"></h3>
+            <label slot="unit"></label>
+        </d-panel>
+    </d-panel>
+</template>
+
+<d-data-grid id="Logs">
     <d-grid-column colkey="FormattedTime" width="12rem"></d-grid-column>
     <d-grid-column colkey="Level" width="7rem"></d-grid-column>
 </d-data-grid>
-<d-line-chart id="WorkingSetMemory" config="options:{scales:{xAxes:[{type:'realtime',realtime:{delay:2000}}],yAxes:[{ticks:{suggestedMin:-1.5,suggestedMax:1.5}}]}}" />
+
+<d-panel horizontal="true">
+    <d-panel flex="0 0 11rem">
+        <d-element id="TotalCpu" template="scalar-display"></d-element>
+        <d-element id="GCTotalMemory" template="scalar-display"></d-element>
+    </d-panel>
+    <d-panel horizontal="true">
+        <d-panel>
+            <d-line-chart id="TotalCpuTrend" height="100px" streaming="true"></d-line-chart>
+        </d-panel>
+        <d-panel>
+            <d-line-chart id="GCTotalMemoryTrend" height="100px" streaming="true"></d-line-chart>
+        </d-panel>
+    </d-panel>
+</d-panel>

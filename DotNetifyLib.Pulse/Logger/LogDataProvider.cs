@@ -13,21 +13,24 @@ limitations under the License.
 
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Reactive.Subjects;
 using DotNetify.Elements;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace DotNetify.Pulse.Log
 {
    public interface IPulseLogger { }
 
-   public class PulseLogger : ILogger, IPulseLogger, IPulseDataSource
+   public class LogDataProvider : ILogger, IPulseLogger, IPulseDataProvider
    {
       private readonly LoggerExternalScopeProvider _scopeProvider;
       private readonly ReplaySubject<LogItem> _logStream;
       private readonly LogConfiguration _logConfig;
 
-      public PulseLogger(LoggerExternalScopeProvider scopeProvider, PulseConfiguration pulseConfig)
+      public LogDataProvider(LoggerExternalScopeProvider scopeProvider, PulseConfiguration pulseConfig)
       {
          _scopeProvider = scopeProvider;
          _logConfig = pulseConfig.Log;
@@ -72,9 +75,9 @@ namespace DotNetify.Pulse.Log
                     RowKey = nameof(LogItem.Time),
                     Columns = new DataGridColumn[]
                      {
-                            new DataGridColumn(nameof(LogItem.FormattedTime), "Time") { Sortable = true },
-                            new DataGridColumn(nameof(LogItem.Level), "Level") { Sortable = true },
-                            new DataGridColumn(nameof(LogItem.Message), "Message")
+                        new DataGridColumn(nameof(LogItem.FormattedTime), "Time") { Sortable = true },
+                        new DataGridColumn(nameof(LogItem.Level), "Level") { Sortable = true },
+                        new DataGridColumn(nameof(LogItem.Message), "Message")
                      },
                     Rows = _logConfig.Rows
                  }
@@ -82,7 +85,6 @@ namespace DotNetify.Pulse.Log
              );
 
          var cachedLogs = new ConcurrentStack<LogItem>();
-         var subscription = _logStream.Subscribe(log => cachedLogs.Push(log));
 
          onPushUpdate = liveUpdate =>
          {
@@ -98,7 +100,19 @@ namespace DotNetify.Pulse.Log
                cachedLogs.Clear();
          };
 
-         return new Disposable(() => subscription.Dispose());
+         return _logStream.Subscribe(log => cachedLogs.Push(log));
+      }
+   }
+
+   public static class PulseLoggerExtensions
+   {
+      public static IServiceCollection AddPulseLogger(this IServiceCollection services)
+      {
+         services.TryAddTransient<LoggerExternalScopeProvider>();
+         services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, PulseLoggerProvider>());
+         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataProvider, LogDataProvider>());
+         services.TryAddSingleton(provider => (IPulseLogger) provider.GetServices<IPulseDataProvider>().First(x => x is LogDataProvider));
+         return services;
       }
    }
 }

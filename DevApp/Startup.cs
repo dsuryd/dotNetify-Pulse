@@ -20,8 +20,7 @@ namespace DevApp
       public void ConfigureServices(IServiceCollection services)
       {
          services.AddSignalR();
-         services.AddDotNetify();
-         services.AddDotNetifyPulse(Configuration);
+         services.AddDotNetify().AddDotNetifyPulse(Configuration);
 
          services.AddHostedService<TestHostedService>();
          services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -39,6 +38,7 @@ namespace DevApp
             });
          });
 
+         app.UseStaticFiles();
          app.UseMvc();
       }
    }

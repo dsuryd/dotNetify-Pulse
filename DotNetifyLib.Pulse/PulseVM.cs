@@ -11,7 +11,7 @@ namespace DotNetify.Pulse
 
       public ReactiveProperty<bool> LiveUpdate { get; }
 
-      public PulseVM(IEnumerable<IPulseDataSource> dataSources, PulseConfiguration pulseConfig)
+      public PulseVM(IEnumerable<IPulseDataProvider> dataSources, PulseConfiguration pulseConfig)
       {
          LiveUpdate = AddProperty(nameof(LiveUpdate), true)
              .WithAttribute(new CheckboxAttribute() { Label = "Live update" });
@@ -36,7 +36,7 @@ namespace DotNetify.Pulse
          base.Dispose();
       }
 
-      private List<OnPushUpdate> ConfigureDataSource(IEnumerable<IPulseDataSource> dataSources)
+      private List<OnPushUpdate> ConfigureDataSource(IEnumerable<IPulseDataProvider> dataSources)
       {
          var onPushUpdates = new List<OnPushUpdate>();
 

@@ -13,4 +13,13 @@
   <ItemGroup>
     <ProjectReference Include="..\DotNetifyLib.Pulse\DotNetifyLib.Pulse.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Chart.js">
+      <PackagePath>\pulse-ui\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <Pack>true</Pack>
+    </Content>
+  </ItemGroup>
 </Project>
