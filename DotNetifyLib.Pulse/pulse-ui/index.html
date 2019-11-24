@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://unpkg.com/dotnetify-elements@latest/dotnetify-elements.css" rel="stylesheet" />
 
+    <style>
+        /*style*/
+    </style>
     <!-- Polyfills for IE 11 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script>
 
@@ -19,8 +22,7 @@
     <script src="https://unpkg.com/dotnetify@latest/dist/dotnetify-react.min.js"></script>
 
     <script src="https://unpkg.com/dotnetify-elements@latest/lib/basic-web-components.bundle.js"></script>
-    <!--<script src="https://unpkg.com/dotnetify-elements@latest/web-components/Chart.js"></script>-->
-    <script src="/Chart.js"></script>
+    <script src="https://unpkg.com/dotnetify-elements@latest/web-components/Chart.js"></script>
     <script src="https://unpkg.com/dotnetify-elements@latest/web-components/DataGrid.js"></script>
 
     <!--script-->
@@ -28,8 +30,11 @@
 <body>
     <d-vm-context vm="PulseVM">
         <d-main>
-            <d-header css="padding: 0 1rem">
-                <d-panel>
+            <d-header height="40px" css="padding: 0 1rem">
+                <d-panel horizontal="true" middle="true">
+                    <a href="https://dotnetify.net">
+                        <img src="https://dotnetify.net/content/images/dotnetify-logo-small.png" width="30" height="30" />
+                    </a>
                     <h2>Pulse</h2>
                 </d-panel>
                 <d-panel right="true" center="true">
@@ -37,9 +42,7 @@
                 </d-panel>
             </d-header>
             <d-section>
-                <d-frame>
-                    <!--section-->
-                </d-frame>
+                <!--section-->
             </d-section>
         </d-main>
     </d-vm-context>

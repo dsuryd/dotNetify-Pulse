@@ -7,13 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DotNetify.Pulse.SystemUsage
 {
-   public class MemoryUsageDataProvider : IPulseDataProvider
+   public class MemoryUsageProvider : IPulseDataProvider
    {
       private readonly ReplaySubject<ProcessData> _dataStream;
       private readonly ProcessData _process = new ProcessData(Process.GetCurrentProcess());
       private readonly int _interval = 1000;
 
-      public MemoryUsageDataProvider(PulseConfiguration pulseConfig)
+      public MemoryUsageProvider(PulseConfiguration pulseConfig)
       {
          _dataStream = new ReplaySubject<ProcessData>();
       }
@@ -60,7 +60,7 @@ namespace DotNetify.Pulse.SystemUsage
    {
       public static IServiceCollection AddPulseMemoryUsage(this IServiceCollection services)
       {
-         return services.AddSingleton<IPulseDataProvider, MemoryUsageDataProvider>();
+         return services.AddSingleton<IPulseDataProvider, MemoryUsageProvider>();
       }
    }
 }

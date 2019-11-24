@@ -24,17 +24,26 @@ namespace DotNetify.Pulse.Log
 {
    public interface IPulseLogger { }
 
-   public class LogDataProvider : ILogger, IPulseLogger, IPulseDataProvider
+   public class LogProvider : ILogger, IPulseLogger, IPulseDataProvider
    {
       private readonly LoggerExternalScopeProvider _scopeProvider;
       private readonly ReplaySubject<LogItem> _logStream;
       private readonly LogConfiguration _logConfig;
 
-      public LogDataProvider(LoggerExternalScopeProvider scopeProvider, PulseConfiguration pulseConfig)
+      public class LogConfiguration
+      {
+         // How many last log items to cache.
+         public int Buffer { get; set; } = 5;
+
+         // Number of rows in the log data grid.
+         public int Rows { get; set; } = 10;
+      }
+
+      public LogProvider(LoggerExternalScopeProvider scopeProvider, PulseConfiguration pulseConfig)
       {
          _scopeProvider = scopeProvider;
-         _logConfig = pulseConfig.Log;
-         _logStream = new ReplaySubject<LogItem>(pulseConfig.Log.Buffer);
+         _logConfig = pulseConfig.GetProvider<LogConfiguration>(nameof(LogProvider));
+         _logStream = new ReplaySubject<LogItem>(_logConfig.Buffer);
       }
 
       #region ILogger Methods
@@ -110,8 +119,8 @@ namespace DotNetify.Pulse.Log
       {
          services.TryAddTransient<LoggerExternalScopeProvider>();
          services.TryAddEnumerable(ServiceDescriptor.Singleton<ILoggerProvider, PulseLoggerProvider>());
-         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataProvider, LogDataProvider>());
-         services.TryAddSingleton(provider => (IPulseLogger) provider.GetServices<IPulseDataProvider>().First(x => x is LogDataProvider));
+         services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataProvider, LogProvider>());
+         services.TryAddSingleton(provider => (IPulseLogger) provider.GetServices<IPulseDataProvider>().First(x => x is LogProvider));
          return services;
       }
    }

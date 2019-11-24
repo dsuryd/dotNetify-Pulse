@@ -39,12 +39,18 @@ namespace DotNetify.Pulse
          if (requestPath.EndsWith("/pulse"))
          {
             string index = ReadFile("index.html", uiPath, DEFAULT_UI_PATH);
+            string style = ReadFile("style.css", uiPath, DEFAULT_UI_PATH);
+            string styleExt = ReadFile("style_ext.css", uiPath, DEFAULT_UI_PATH);
             string script = ReadFile("script.html", uiPath, DEFAULT_UI_PATH);
             string section = ReadFile("section.html", uiPath, DEFAULT_UI_PATH);
+            string sectionExt = ReadFile("section_ext.html", uiPath, DEFAULT_UI_PATH);
 
             await httpContext.Response.WriteAsync(index
+               .Replace("/*style*/", style)
+               .Replace("/*style_ext*/", style)
                .Replace("<!--script-->", script)
                .Replace("<!--section-->", section)
+               .Replace("<!--section_ext-->", sectionExt)
             );
          }
          else

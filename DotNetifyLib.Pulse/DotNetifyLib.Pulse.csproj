@@ -16,9 +16,10 @@
 
   <ItemGroup>
     <None Remove="pulse-ui\section.html" />
+    <None Remove="pulse-ui\style.css" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetify.Elements" Version="1.2.0-rc1" />
+    <PackageReference Include="DotNetify.Elements" Version="1.2.0" />
     <PackageReference Include="DotNetify.SignalR" Version="3.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />

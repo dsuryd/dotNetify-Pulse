@@ -11,6 +11,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
+using System;
+using Microsoft.Extensions.Configuration;
+
 namespace DotNetify.Pulse
 {
    public class PulseConfiguration
@@ -23,15 +26,8 @@ namespace DotNetify.Pulse
       // Minimum interval between push updates in milliseconds.
       public int PushUpdateInterval { get; set; } = 100;
 
-      public LogConfiguration Log { get; set; } = new LogConfiguration();
-   }
+      public IConfigurationSection Providers { get; set; }
 
-   public class LogConfiguration
-   {
-      // How many last log items to cache.
-      public int Buffer { get; set; } = 5;
-
-      // Number of rows in the log data grid.
-      public int Rows { get; set; } = 10;
+      public T GetProvider<T>(string key) where T : class => Providers.GetSection(key).Get<T>() ?? Activator.CreateInstance<T>();
    }
 }
