@@ -45,7 +45,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 ##### 3. Build, then open your web browser to `<service-base-url>/pulse`. You should see this page:
-> Internet connection is required for loading the UI scripts on CDN.
+> *Internet connection is required for loading the UI scripts on CDN.*
 
 <img src="https://github.com/dsuryd/dotNetify-Pulse/blob/master/Demo/pulse-demo.gif" />
 
@@ -65,7 +65,7 @@ There is a dotNetify view model in this repo named `PulseVM`. This class is the 
 
 When it's instantiated, it will look for service objects that implements *IPulseDataProvider* and passes its own instance to the interface's `Configure` method so that service object can add properties for the data stream.  The view model then regularly checks for data updates on those properties and push them to the browser.
 
-On the browser side, when it sends the '/pulse' HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view mode, and to maintain connection to the data properties to auto-update, in order to achieve very minimal client-side scripting.
+On the browser side, when it sends the `/pulse` HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view model, and to maintain connection to the data properties to auto-update, in order to achieve very minimal client-side scripting.
 
 #### Steps
 
