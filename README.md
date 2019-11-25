@@ -69,7 +69,7 @@ On the browser side, when it sends the '/pulse' HTTP request, this library's mid
 
 #### Steps
 
-#####1. Create your custom data provider class that implements _IPulseDataProvider_.
+##### 1. Create your custom data provider class that implements _IPulseDataProvider_.
 
 For example, let's create a simple clock provider:
 ```csharp
@@ -93,13 +93,13 @@ public class ClockProvider : IPulseDataProvider
 - Use `AddProperty` to add a new observable property named "Clock" to the Pulse view model, with an initial value.
 - Create a timer to emit new value every 1 second.
 
-#####2. Register the provider in the startup's _ConfigureServices_.
+##### 2. Register the provider in the startup's _ConfigureServices_.
 
 ```csharp
 services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataProvider, ClockProvider>());
 ```
 
-#####3. Add a web component to the static HTML page and associate it with the property.
+##### 3. Add a web component to the static HTML page and associate it with the property.
 
 To do this, you will override the default HTML fragment file called "section.html".  Notice that we you build your service, the library creates in your project a folder called "pulse-ui" that contains "section_template.html".  
 
@@ -117,7 +117,7 @@ To do this, you will override the default HTML fragment file called "section.htm
 ```
 > Read the dotNetify-Elements documentation for info on all the available web components.
 
-#####4.  Configure the location of the custom UI folder in the startup's _Configure_.
+##### 4.  Configure the location of the custom UI folder in the startup's _Configure_.
 
 ```csharp
 app.UseDotNetifyPulse(config => config.UIPath = Directory.GetCurrentDirectory() + "\\custom-pulse-ui");
