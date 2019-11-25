@@ -124,7 +124,7 @@ To do this, you will override the default HTML fragment file called _"section.ht
 app.UseDotNetifyPulse(config => config.UIPath = Directory.GetCurrentDirectory() + "\\custom-pulse-ui");
 ```
 
-All done!
+And that's it!
 
 
 
