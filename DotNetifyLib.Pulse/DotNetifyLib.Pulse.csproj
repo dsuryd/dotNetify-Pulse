@@ -8,7 +8,7 @@
     <PackageId>DotNetify.Pulse</PackageId>
     <Product>DotNetify.Pulse</Product>
     <Description>Customizable real-time monitoring for .NET services.</Description>
-    <Version>0.5.0-RC4</Version>
+    <Version>0.5.0</Version>
     <PackageProjectUrl>https://github.com/dsuryd/dotNetify-Pulse</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dsuryd/dotNetify-Pulse</RepositoryUrl>
     <Copyright>Copyright 2019</Copyright>
