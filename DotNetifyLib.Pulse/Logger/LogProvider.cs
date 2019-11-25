@@ -12,7 +12,7 @@ limitations under the License.
  */
 
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Subjects;
 using DotNetify.Elements;
@@ -76,7 +76,7 @@ namespace DotNetify.Pulse.Log
 
          var selectedLog = pulseVM.AddProperty<DateTimeOffset>(nameof(SelectedLog));
 
-         pulseVM.AddProperty(nameof(Logs), new LogItem[] { })
+         pulseVM.AddProperty(nameof(Logs), new LogItem[] { new LogItem(LogLevel.None, "Pulse logger started") })
              .WithItemKey(nameof(LogItem.Time))
              .WithAttribute(
                  new DataGridAttribute
@@ -93,23 +93,28 @@ namespace DotNetify.Pulse.Log
                  .CanSelect(DataGridAttribute.Selection.Single, selectedLog)
              );
 
-         var cachedLogs = new ConcurrentStack<LogItem>();
+         var cachedLogs = new List<LogItem>();
 
          onPushUpdate = liveUpdate =>
          {
-            if (liveUpdate)
+            lock (cachedLogs)
             {
-               if (cachedLogs.TryPop(out LogItem log))
+               if (liveUpdate && cachedLogs.Count > 0)
                {
-                  pulseVM.AddList(nameof(Logs), log);
-                  selectedLog.Value = log.Time;
+                  pulseVM.AddList(nameof(Logs), cachedLogs.ToArray());
+                  selectedLog.Value = cachedLogs.Last().Time;
                }
-            }
-            else
                cachedLogs.Clear();
+            }
          };
 
-         return _logStream.Subscribe(log => cachedLogs.Push(log));
+         return _logStream.Subscribe(log =>
+         {
+            lock (cachedLogs)
+            {
+               cachedLogs.Add(log);
+            }
+         });
       }
    }
 

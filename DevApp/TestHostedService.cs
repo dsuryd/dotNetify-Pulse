@@ -18,6 +18,7 @@ namespace DevApp
 
       public Task StartAsync(CancellationToken cancellationToken)
       {
+         int count = 0;
          var random = new Random();
          _subs = Observable
             .Interval(TimeSpan.FromMilliseconds(100))
@@ -28,7 +29,7 @@ namespace DevApp
                {
                   var level = random.Next(0, 6);
                   var logLevel = (LogLevel) level;
-                  _logger.Log(logLevel, $"Test log level {logLevel}");
+                  _logger.Log(logLevel, $"Test log {++count} level {logLevel}");
                }
             });
 
