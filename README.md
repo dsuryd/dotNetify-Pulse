@@ -72,6 +72,9 @@ On the browser side, when it sends the '/pulse' HTTP request, this library's mid
 ##### 1. Create your custom data provider class that implements _IPulseDataProvider_.
 
 For example, let's create a simple clock provider:
+- Use `AddProperty` to add a new observable property named "Clock" to the Pulse view model, with an initial value.
+- Create a timer to emit new value every second.
+
 ```csharp
 using DotNetify.Pulse;
 using System.Reactive.Linq;
@@ -90,8 +93,6 @@ public class ClockProvider : IPulseDataProvider
    }
 }
 ```
-- Use `AddProperty` to add a new observable property named "Clock" to the Pulse view model, with an initial value.
-- Create a timer to emit new value every 1 second.
 
 ##### 2. Register the provider in the startup's _ConfigureServices_.
 
