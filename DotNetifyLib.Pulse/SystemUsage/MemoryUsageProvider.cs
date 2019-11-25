@@ -31,7 +31,7 @@ namespace DotNetify.Pulse.SystemUsage
             .SubscribeTo(_dataStream.Select(x => x.GCTotalMemory))
             .SubscribedBy(value => pulseVM.AddList(nameof(GCTotalMemoryTrend), ToChartData(++tick, value)), out IDisposable totalMemoryTrendSubs);
 
-         pulseVM.AddProperty(nameof(GCTotalMemoryTrend), ToChartData(tick, _process.GCTotalMemory))
+         pulseVM.AddProperty(nameof(GCTotalMemoryTrend), new string[][] { ToChartData(tick, _process.GCTotalMemory) })
             .WithAttribute(new ChartAttribute
             {
                Title = "GC Total Memory",

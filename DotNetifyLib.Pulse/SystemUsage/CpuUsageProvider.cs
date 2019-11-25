@@ -31,7 +31,7 @@ namespace DotNetify.Pulse.SystemUsage
             .SubscribeTo(_dataStream.Select(x => x.TotalCpu))
             .SubscribedBy(value => pulseVM.AddList(nameof(TotalCpuTrend), ToChartData(++tick, value)), out IDisposable totalCpuTrendSubs);
 
-         pulseVM.AddProperty(nameof(TotalCpuTrend), ToChartData(tick, _process.TotalCpu))
+         pulseVM.AddProperty(nameof(TotalCpuTrend), new string[][] { ToChartData(tick, _process.TotalCpu) })
             .WithAttribute(new ChartAttribute
             {
                Title = "Total CPU",

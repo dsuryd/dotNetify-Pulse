@@ -20,7 +20,8 @@ namespace DevApp
       public void ConfigureServices(IServiceCollection services)
       {
          services.AddSignalR();
-         services.AddDotNetify().AddDotNetifyPulse(Configuration);
+         services.AddDotNetify();
+         services.AddDotNetifyPulse(Configuration);
 
          services.AddHostedService<TestHostedService>();
          services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -30,12 +31,10 @@ namespace DevApp
       {
          app.UseWebSockets();
          app.UseSignalR(config => config.MapDotNetifyHub());
-         app.UseDotNetify(config =>
+         app.UseDotNetify();
+         app.UseDotNetifyPulse(config =>
          {
-            config.UseDotNetifyPulse(app, pulse =>
-            {
-               pulse.UIPath = $"{Directory.GetCurrentDirectory()}\\custom-pulse-ui";
-            });
+            config.UIPath = $"{Directory.GetCurrentDirectory()}\\custom-pulse-ui";
          });
 
          app.UseStaticFiles();

@@ -40,14 +40,14 @@ namespace DotNetify.Pulse
          return services.RemoveAll<IPulseDataProvider>();
       }
 
-      public static IDotNetifyConfiguration UseDotNetifyPulse(this IDotNetifyConfiguration dotNetifyConfig, IApplicationBuilder app, Action<PulseConfiguration> options = null)
+      public static IApplicationBuilder UseDotNetifyPulse(this IApplicationBuilder app, Action<PulseConfiguration> options = null)
       {
          var pulseConfig = app.ApplicationServices.GetRequiredService<PulseConfiguration>();
          options?.Invoke(pulseConfig);
 
-         dotNetifyConfig.RegisterAssembly(typeof(PulseVM).Assembly);
+         VMController.RegisterAssembly(typeof(PulseVM).Assembly);
          app.UseMiddleware<PulseMiddleware>();
-         return dotNetifyConfig;
+         return app;
       }
 
       public static void AddTo<T>(this T item, List<T> items)

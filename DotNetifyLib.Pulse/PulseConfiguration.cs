@@ -28,6 +28,6 @@ namespace DotNetify.Pulse
 
       public IConfigurationSection Providers { get; set; }
 
-      public T GetProvider<T>(string key) where T : class => Providers.GetSection(key).Get<T>() ?? Activator.CreateInstance<T>();
+      public T GetProvider<T>(string key) where T : class => Providers?.GetSection(key).Get<T>() ?? Activator.CreateInstance<T>();
    }
 }
