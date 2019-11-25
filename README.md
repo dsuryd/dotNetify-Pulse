@@ -102,11 +102,11 @@ services.TryAddEnumerable(ServiceDescriptor.Singleton<IPulseDataProvider, ClockP
 
 ##### 3. Add a web component to the static HTML page and associate it with the property.
 
-To do this, you will override the default HTML fragment file called "section.html".  Notice that we you build your service, the library creates in your project a folder called "pulse-ui" that contains "section_template.html".  
+To do this, you will override the default HTML fragment file called _"section.html"_.  Notice that we you build your service, the library creates in your project a folder called _"pulse-ui"_ which contains _"section_template.html"_.  
 
-- Copy and paste this folder to a new one and name it "custom-pulse-ui".
-- Rename "section_template.html" to "section.html".
-- Right-click on "section.html", select Properties, and set the "Copy to Output Directory" to "Copy if newer".
+- Copy and paste this folder to a new one and name it *_"custom-pulse-ui"_*.
+- Rename _"section_template.html"_ to *_"section.html"_*.
+- Right-click on _"section.html"_, select Properties, and set the "Copy to Output Directory" to *_"Copy if newer"_*.
 - Edit the html file and insert the following:
 ```html
 ...
