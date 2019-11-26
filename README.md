@@ -140,7 +140,7 @@ If you want to pass application settings through `appsettings.json`, you can inc
 ```
 To read the settings, inject `PulseConfiguration` type in your constructor, and use the `GetProvider` method:
 ```csharp
-publi class ClockSettings
+internal class ClockSettings
 {
    public string TimeFormat { get; set; }
 }
