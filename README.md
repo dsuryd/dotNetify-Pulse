@@ -45,7 +45,7 @@ public void Configure(IApplicationBuilder app)
 ```
 
 ##### 3. Build, then open your web browser to `<service-base-url>/pulse`. You should see this page:
-> *Internet connection is required for loading the UI scripts on CDN.*
+> *Internet connection is required for loading the UI scripts from public CDN.*
 
 <img src="https://github.com/dsuryd/dotNetify-Pulse/blob/master/Demo/pulse-demo.gif" />
 
