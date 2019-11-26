@@ -65,7 +65,7 @@ There is a dotNetify view model in this repo named `PulseVM`. This class is the 
 
 When it's instantiated, it will look for service objects that implements *IPulseDataProvider* and passes its own instance to the interface's `Configure` method so that service object can add properties for the data stream.  The view model then regularly checks for data updates on those properties and push them to the browser.
 
-On the browser side, when it sends the `/pulse` HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view model, and to maintain connection to the data properties to auto-update, in order to achieve very minimal client-side scripting.
+On the browser side, when it sends the `/pulse` HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view model and maintain connection to the data properties for auto-update, in order to achieve minimal client-side scripting.
 
 #### Steps
 
@@ -116,7 +116,7 @@ To do this, you will override the default HTML fragment file called _"section.ht
    </div>
 ...
 ```
-> Read the dotNetify-Elements documentation for info on all the available web components.
+> Read the [dotNetify-Elements documentation](https://dotnetify.net/elements) for info on all the available web components.
 
 ##### 4.  Configure the location of the custom UI folder in the startup's _Configure_.
 
@@ -124,7 +124,33 @@ To do this, you will override the default HTML fragment file called _"section.ht
 app.UseDotNetifyPulse(config => config.UIPath = Directory.GetCurrentDirectory() + "\\custom-pulse-ui");
 ```
 
-And that's it!
+##### 5. (Optional) Add to application settings.
+
+If you want to pass application settings through `appsettings.json`, you can include your custom configuration in the _"DotNetifyPulse"_ configuration section, under `"Providers"`.  For example:
+```json
+{
+  "DotNetifyPulse": {
+    "Providers": {
+       "ClockProvider": {
+          "TimeFormat": "hh:mm:ss"
+       }
+    }
+  }
+}
+```
+To read the settings, inject `PulseConfiguration` type in your constructor, and use the `GetProvider` method:
+```csharp
+publi class ClockSettings
+{
+   public string TimeFormat { get; set; }
+}
+
+public ClockProvider(PulseConfiguration config)
+{
+   var settings = config.GetProvider<ClockSettings>("ClockProvider");
+}
+```
+
 
 
 
