@@ -1,8 +1,10 @@
 <p align="center"><img width="300px" src="http://dotnetify.net/content/images/dotnetify-logo.png"></p>
 
+[![NuGet version](https://badge.fury.io/nu/DotNetify.Pulse.svg)](https://badge.fury.io/nu/DotNetify.Pulse)
+
 ## DotNetify-Pulse
 
-Adds an endpoint to any .NET Core service to display a customizable web view to monitor the service's log activities and resource usage in real-time. 
+Adds an endpoint to any .NET Core service that opens a customizable web view to monitor the service's log activities and resource usage in real-time. 
 
 ### How to Install
 
