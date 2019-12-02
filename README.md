@@ -39,10 +39,7 @@ public void Configure(IApplicationBuilder app)
    
    // .NET Core 3.x only:
    app.UseRouting();
-   app.UseEndpoints(endpoints =>
-   {
-      endpoints.MapHub<DotNetifyHub>("/dotnetify");
-   });
+   app.UseEndpoints(endpoints => endpoints.MapHub<DotNetifyHub>("/dotnetify"));
 }
 ```
 
@@ -56,7 +53,7 @@ public void Configure(IApplicationBuilder app)
 ### How to Customize
 
 #### Overview 
-Before you proceed, let's first do a bit of dive on how this thing works. 
+Before you proceed, let's first do a bit of a dive on how this thing works. 
 
 This library uses:
 - SignalR to push data from your service to the web browser.
@@ -67,7 +64,7 @@ There is a dotNetify view model in this repo named `PulseVM`. This class is the 
 
 When it's instantiated, it will look for service objects that implements *IPulseDataProvider* and passes its own instance to the interface's `Configure` method so that service object can add properties for the data stream.  The view model then regularly checks for data updates on those properties and push them to the browser.
 
-On the browser side, when it sends the `/pulse` HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view model and maintain connection to the data properties for auto-update, in order to achieve minimal client-side scripting.
+On the browser side, when it sends the `/pulse` HTTP request, this library's middleware intercepts it and returns `index.html`.  You can find it and other static files in your service's output directory under `pulse-ui` folder.  The HTML markup uses highly specialized web components from dotNetify-Elements to display data grid and charts and for layout.  These components are designed so that they can be configured from the server-side view model and maintain connection with the data properties to auto-update, without requiring client-side scripting.
 
 #### Steps
 
