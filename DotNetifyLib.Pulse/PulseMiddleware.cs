@@ -20,7 +20,7 @@ namespace DotNetify.Pulse
 {
    internal class PulseMiddleware
    {
-      private static readonly string DEFAULT_UI_PATH = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\pulse-ui";
+      private static readonly string DEFAULT_UI_PATH = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}{Path.DirectorySeparatorChar}pulse-ui";
 
       private readonly RequestDelegate _next;
       private readonly PulseConfiguration _config;
@@ -47,7 +47,7 @@ namespace DotNetify.Pulse
 
             await httpContext.Response.WriteAsync(index
                .Replace("/*style*/", style)
-               .Replace("/*style_ext*/", style)
+               .Replace("/*style_ext*/", styleExt)
                .Replace("<!--script-->", script)
                .Replace("<!--section-->", section)
                .Replace("<!--section_ext-->", sectionExt)
@@ -59,8 +59,10 @@ namespace DotNetify.Pulse
 
       private string ReadFile(string fileName, string path, string defaultPath)
       {
-         string filePath = $"{path}\\{fileName}";
-         string defaultFilePath = $"{defaultPath}\\{fileName}";
+         char directorySeparatorChar  = Path.DirectorySeparatorChar;
+         string separatorWithFileName = $"{directorySeparatorChar}{fileName}";
+         string filePath              = path + separatorWithFileName;
+         string defaultFilePath       = defaultPath + separatorWithFileName;
 
          string validPath = File.Exists(filePath) ? filePath : File.Exists(defaultFilePath) ? defaultFilePath : null;
          if (validPath == null)
