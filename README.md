@@ -12,7 +12,7 @@ Adds an endpoint to any .NET Core service that opens a customizable web view to 
 
 ##### 1. Install the nuget package:
 ```
-dotnet add package DoNetify.Pulse
+dotnet add package DotNetify.Pulse
 ```
 
 ##### 2. Configure the services and the pipeline in `Startup.cs`:
