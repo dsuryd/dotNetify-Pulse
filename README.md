@@ -48,7 +48,9 @@ public void Configure(IApplicationBuilder app)
 
 <img src="https://github.com/dsuryd/dotNetify-Pulse/blob/master/Demo/pulse-demo.gif" />
 
-> If you use 'dotnet publish', you have to manually copy the folder 'pulse-ui' from the build output to the publish folder.
+##### 4. If you plan to use `dotnet publish`:
+- copy the folder 'pulse-ui' from the build output to your project.
+- set the build action of the files in the folder to `Content` and `Copy if newer`.
 
 ### How to Customize
 
